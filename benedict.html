@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Thí nghiệm ảo Benedict</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #eef2f5;
+}
+.container {
+    width: 820px;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.25);
+}
+h1 { text-align: center; }
+
+.lab {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+.tube {
+    width: 120px;
+    height: 260px;
+    border: 4px solid #333;
+    border-radius: 0 0 60px 60px;
+    position: relative;
+}
+.liquid {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    background: transparent;
+    border-radius: 0 0 55px 55px;
+    transition: background 1.5s linear;
+}
+button, select {
+    padding: 8px 14px;
+    margin: 6px 0;
+    font-size: 15px;
+}
+.log {
+    margin-top: 15px;
+    background: #f6f6f6;
+    padding: 14px;
+    border-radius: 10px;
+    min-height: 130px;
+    white-space: pre-line;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🧪 Thí nghiệm ảo: Nhận biết đường khử (Benedict)</h1>
+
+<div class="lab">
+
+<div class="tube">
+    <div class="liquid" id="liquid"></div>
+</div>
+
+<div>
+    <h3>Mẫu vật</h3>
+    <select id="sample">
+        <option value="water">Nước cất</option>
+        <option value="glucose">Dung dịch glucose 5%</option>
+        <option value="sucrose">Dung dịch sucrose 5%</option>
+        <option value="fruit">Dịch chiết quả tươi</option>
+    </select>
+
+    <br>
+    <button onclick="addSample()">➕ Cho 1 mL mẫu vật</button><br>
+    <button onclick="addBenedict()">➕ Cho 1 mL Benedict</button><br>
+    <button onclick="heat()">🔥 Đun nóng</button><br>
+    <button onclick="resetLab()">🔄 Reset</button>
+</div>
+
+</div>
+
+<div class="log" id="log">
+Chuẩn bị ống nghiệm sạch.
+</div>
+</div>
+
+<script>
+let step = 0; 
+// 0: chưa có gì | 1: có mẫu | 2: có Benedict | 3: đã đun
+
+const liquid = document.getElementById("liquid");
+const log = document.getElementById("log");
+
+function addSample() {
+    step = 1;
+    liquid.style.height = "25%";
+    liquid.style.background = "#cfe4ff"; // xanh nhạt
+    log.innerText =
+        "Cho 1 mL mẫu vật vào ống nghiệm.\n" +
+        "Dung dịch có màu xanh nhạt.";
+}
+
+function addBenedict() {
+    if (step !== 1) {
+        alert("Phải cho mẫu vật trước!");
+        return;
+    }
+    step = 2;
+    liquid.style.height = "50%";
+    liquid.style.background = "#0057b7"; // xanh đậm
+    log.innerText =
+        "Thêm 1 mL thuốc thử Benedict.\n" +
+        "Dung dịch đạt nửa ống, màu xanh đậm.";
+}
+
+function heat() {
+    if (step !== 2) {
+        alert("Chưa đủ điều kiện để đun!");
+        return;
+    }
+    step = 3;
+    const sample = document.getElementById("sample").value;
+
+    log.innerText += "\nBắt đầu đun nóng ống nghiệm...";
+
+    // GIỮ XANH 1.5 GIÂY ĐỂ NHÌN RÕ
+    setTimeout(() => {
+        if (sample === "glucose" || sample === "fruit") {
+            liquid.style.background = "rgb(178,34,34)"; // đỏ gạch
+            log.innerText +=
+                "\nDung dịch CHUYỂN TỪ XANH ĐẬM → ĐỎ GẠCH.\n" +
+                "→ Mẫu vật CÓ chứa đường khử.";
+        } else {
+            liquid.style.background = "#0057b7";
+            log.innerText +=
+                "\nDung dịch không đổi màu.\n" +
+                "→ Mẫu vật KHÔNG chứa đường khử.";
+        }
+    }, 1500);
+}
+
+function resetLab() {
+    step = 0;
+    liquid.style.height = "0%";
+    liquid.style.background = "transparent";
+    log.innerText = "Ống nghiệm đã được rửa sạch. Sẵn sàng thí nghiệm mới.";
+}
+</script>
+
+</body>
+</html>
+
+
+
