@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Thí nghiệm ảo Benedict</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.lab {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+/* Ống nghiệm */
+.tube-wrapper {
+  text-align: center;
+}
+
+.tube {
+  width: 70px;
+  height: 220px;
+  border: 4px solid #333;
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+.liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background: transparent;
+  transition: all 1s ease;
+}
+
+/* Màu */
+.light-blue { background: #b7e3ff; }
+.blue { background: #2f80ed; }
+.brick-red {
+  background: linear-gradient(to top, #7a2d1d, #b85c38);
+}
+
+/* Kết tủa */
+.precipitate {
+  position: absolute;
+  bottom: 0;
+  height: 25%;
+  width: 100%;
+  background: #6b1f12;
+}
+
+/* Ngọn lửa */
+.flame {
+  width: 30px;
+  height: 50px;
+  margin: auto;
+  display: none;
+  background: radial-gradient(circle at 50% 70%, #ffd966, #ff4500);
+  border-radius: 50% 50% 50% 50%;
+  animation: flicker 0.3s infinite;
+}
+
+@keyframes flicker {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+button {
+  margin: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.log {
+  margin-top: 30px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  min-height: 120px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧪 Thí nghiệm ảo: Nhận biết đường khử (Benedict)</h1>
+
+<div class="lab" id="lab"></div>
+
+<div style="text-align:center;margin-top:20px;">
+  <button onclick="resetAll()">🔄 Reset thí nghiệm</button>
+</div>
+
+<div class="log" id="log">
+  👉 Chuẩn bị 4 ống nghiệm sạch.
+</div>
+
+<script>
+const samples = [
+  "Nước cất",
+  "Dung dịch glucose 5%",
+  "Dung dịch sucrose 5%",
+  "Dịch chiết chuối chín"
+];
+
+const reducingSamples = [
+  "Dung dịch glucose 5%",
+  "Dịch chiết chuối chín"
+];
+
+const lab = document.getElementById("lab");
+const logBox = document.getElementById("log");
+
+let tubes = [];
+
+function log(text) {
+  logBox.innerHTML += "<br>" + text;
+}
+
+function createLab() {
+  lab.innerHTML = "";
+  tubes = [];
+
+  samples.forEach((sample, i) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "tube-wrapper";
+
+    wrapper.innerHTML = `
+      <div class="tube">
+        <div class="liquid" id="liquid${i}"></div>
+      </div>
+      <div class="flame" id="flame${i}"></div>
+      <p><b>${sample}</b></p>
+      <button onclick="addSample(${i})">+ 1 mL mẫu</button><br>
+      <button onclick="addBenedict(${i})">+ 1 mL Benedict</button><br>
+      <button onclick="heat(${i})">🔥 Đun nóng</button>
+    `;
+
+    lab.appendChild(wrapper);
+
+    tubes.push({
+      sample,
+      sampleAdded: false,
+      benedictAdded: false,
+      liquid: document.getElementById(`liquid${i}`),
+      flame: document.getElementById(`flame${i}`)
+    });
+  });
+}
+
+function addSample(i) {
+  const t = tubes[i];
+  if (t.sampleAdded) return;
+
+  t.sampleAdded = true;
+  t.liquid.style.height = "25%";
+  t.liquid.className = "liquid light-blue";
+  log(`🧪 Ống ${i+1}: Cho 1 mL ${t.sample}.`);
+}
+
+function addBenedict(i) {
+  const t = tubes[i];
+  if (!t.sampleAdded || t.benedictAdded) return;
+
+  t.benedictAdded = true;
+  t.liquid.style.height = "50%";
+  t.liquid.className = "liquid blue";
+  log(`➕ Ống ${i+1}: Thêm 1 mL thuốc thử Benedict (màu xanh đậm).`);
+}
+
+function heat(i) {
+  const t = tubes[i];
+  if (!t.sampleAdded || !t.benedictAdded) {
+    log(`❌ Ống ${i+1}: Chưa đủ điều kiện để đun.`);
+    return;
+  }
+
+  t.flame.style.display = "block";
+  log(`🔥 Ống ${i+1}: Đang đun nóng...`);
+
+  setTimeout(() => {
+    t.flame.style.display = "none";
+
+    if (reducingSamples.includes(t.sample)) {
+      t.liquid.className = "liquid brick-red";
+      t.liquid.innerHTML = `<div class="precipitate"></div>`;
+      log(`✅ Ống ${i+1}: Xuất hiện kết tủa đỏ gạch → Có đường khử.`);
+    } else {
+      log(`❌ Ống ${i+1}: Dung dịch vẫn xanh → Không có đường khử.`);
+    }
+  }, 2500);
+}
+
+function resetAll() {
+  logBox.innerHTML = "🔄 Đã reset thí nghiệm.";
+  createLab();
+}
+
+createLab();
+</script>
+
+</body>
+</html>
