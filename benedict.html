@@ -3,33 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <title>Thí nghiệm ảo Benedict</title>
+
 <style>
 body {
   font-family: Arial, sans-serif;
   background: #f4f6f8;
   text-align: center;
 }
-h1 {
-  margin-top: 20px;
-}
+
+h1 { margin-top: 20px; }
+
 .container {
   display: flex;
   justify-content: space-around;
-  margin-top: 30px;
+  margin-top: 40px;
 }
+
+/* KHỐI ỐNG */
 .tube-box {
   width: 180px;
+  position: relative;
 }
+
+/* ỐNG NGHIỆM */
 .tube {
   width: 80px;
-  height: 220px;
+  height: 240px;
   border: 4px solid #333;
   border-radius: 0 0 40px 40px;
-  margin: 0 auto 10px;
+  margin: 0 auto;
   position: relative;
-  background: transparent;
   overflow: hidden;
 }
+
+/* DUNG DỊCH */
 .liquid {
   position: absolute;
   bottom: 0;
@@ -37,30 +44,53 @@ h1 {
   height: 0%;
   background: transparent;
   transition: all 1s;
+  z-index: 1;
 }
+
+/* DẤU GẠCH MẪU KHÔNG MÀU */
+.sample-mark {
+  position: absolute;
+  bottom: 35%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  z-index: 2;
+}
+
+/* NGỌN LỬA */
+.fire {
+  position: absolute;
+  left: 50%;
+  top: 255px;
+  transform: translateX(-50%);
+  font-size: 30px;
+  display: none;
+  animation: flicker 0.4s infinite alternate;
+}
+
+@keyframes flicker {
+  from { transform: translateX(-50%) scale(1); }
+  to { transform: translateX(-50%) scale(1.2); }
+}
+
+/* NÚT */
+.controls { margin-top: 30px; }
+
 button {
   margin: 4px;
   padding: 6px 10px;
   cursor: pointer;
 }
-.fire {
-  font-size: 28px;
-  display: none;
-  animation: flicker 0.4s infinite alternate;
-}
-@keyframes flicker {
-  from { transform: scale(1); }
-  to { transform: scale(1.15); }
-}
+
+/* LOG */
 .log {
-  margin-top: 25px;
+  margin: 30px auto;
   background: #fff;
   padding: 15px;
   width: 80%;
-  margin-left: auto;
-  margin-right: auto;
   border-radius: 8px;
-  min-height: 60px;
 }
 </style>
 </head>
@@ -75,36 +105,45 @@ button {
   <div class="tube-box">
     <div class="tube">
       <div class="liquid" id="liq1"></div>
+      <div class="sample-mark" id="mark1"></div>
     </div>
-    <b>Nước cất</b><br>
-    <button onclick="addSample(1)">+ 1 mL mẫu</button><br>
-    <button onclick="addBenedict(1)">+ 1 mL Benedict</button><br>
-    <button onclick="heat(1)">🔥 Đun nóng</button>
     <div class="fire" id="fire1">🔥</div>
+    <b>Nước cất</b>
+    <div class="controls">
+      <button onclick="addSample(1)">+ 1 mL mẫu</button><br>
+      <button onclick="addBenedict(1)">+ 1 mL Benedict</button><br>
+      <button onclick="heat(1)">🔥 Đun nóng</button>
+    </div>
   </div>
 
   <!-- ỐNG 2 -->
   <div class="tube-box">
     <div class="tube">
       <div class="liquid" id="liq2"></div>
+      <div class="sample-mark" id="mark2"></div>
     </div>
-    <b>Glucose 5%</b><br>
-    <button onclick="addSample(2)">+ 1 mL mẫu</button><br>
-    <button onclick="addBenedict(2)">+ 1 mL Benedict</button><br>
-    <button onclick="heat(2)">🔥 Đun nóng</button>
     <div class="fire" id="fire2">🔥</div>
+    <b>Glucose 5%</b>
+    <div class="controls">
+      <button onclick="addSample(2)">+ 1 mL mẫu</button><br>
+      <button onclick="addBenedict(2)">+ 1 mL Benedict</button><br>
+      <button onclick="heat(2)">🔥 Đun nóng</button>
+    </div>
   </div>
 
   <!-- ỐNG 3 -->
   <div class="tube-box">
     <div class="tube">
       <div class="liquid" id="liq3"></div>
+      <div class="sample-mark" id="mark3"></div>
     </div>
-    <b>Sucrose 5%</b><br>
-    <button onclick="addSample(3)">+ 1 mL mẫu</button><br>
-    <button onclick="addBenedict(3)">+ 1 mL Benedict</button><br>
-    <button onclick="heat(3)">🔥 Đun nóng</button>
     <div class="fire" id="fire3">🔥</div>
+    <b>Sucrose 5%</b>
+    <div class="controls">
+      <button onclick="addSample(3)">+ 1 mL mẫu</button><br>
+      <button onclick="addBenedict(3)">+ 1 mL Benedict</button><br>
+      <button onclick="heat(3)">🔥 Đun nóng</button>
+    </div>
   </div>
 
   <!-- ỐNG 4 -->
@@ -112,23 +151,24 @@ button {
     <div class="tube">
       <div class="liquid" id="liq4"></div>
     </div>
-    <b>Dịch chiết chuối chín</b><br>
-    <button onclick="addSample(4)">+ 1 mL mẫu</button><br>
-    <button onclick="addBenedict(4)">+ 1 mL Benedict</button><br>
-    <button onclick="heat(4)">🔥 Đun nóng</button>
     <div class="fire" id="fire4">🔥</div>
+    <b>Dịch chiết chuối chín</b>
+    <div class="controls">
+      <button onclick="addSample(4)">+ 1 mL mẫu</button><br>
+      <button onclick="addBenedict(4)">+ 1 mL Benedict</button><br>
+      <button onclick="heat(4)">🔥 Đun nóng</button>
+    </div>
   </div>
 
 </div>
 
-<br>
 <button onclick="resetAll()">🔄 Reset</button>
 
 <div class="log" id="log">Chuẩn bị ống nghiệm sạch.</div>
 
 <script>
-let hasSample = [false,false,false,false,false];
-let hasBenedict = [false,false,false,false,false];
+let hasSample = [];
+let hasBenedict = [];
 
 function log(txt){
   document.getElementById("log").innerText = txt;
@@ -137,12 +177,13 @@ function log(txt){
 function addSample(i){
   const liq = document.getElementById("liq"+i);
   liq.style.height = "20%";
+
   if(i === 4){
-    liq.style.background = "#fff2b3"; // vàng nhạt
-    log("Cho 1 mL dịch chiết chuối chín → dung dịch vàng nhạt.");
+    liq.style.background = "#fff2b3";
+    log("Cho 1 mL dịch chiết chuối → dung dịch vàng nhạt.");
   } else {
-    liq.style.background = "transparent";
-    log("Cho 1 mL mẫu → dung dịch không màu.");
+    document.getElementById("mark"+i).style.display = "block";
+    log("Cho 1 mL mẫu → dung dịch không màu (đã đánh dấu).");
   }
   hasSample[i] = true;
 }
@@ -154,37 +195,48 @@ function addBenedict(i){
   }
   const liq = document.getElementById("liq"+i);
   liq.style.height = "50%";
-  liq.style.background = "#1e90ff"; // xanh lam đậm
+  liq.style.background = "#1e90ff";
+
+  if(i !== 4){
+    document.getElementById("mark"+i).style.display = "none";
+  }
+
   hasBenedict[i] = true;
-  log("Cho 1 mL thuốc thử Benedict → dung dịch xanh lam.");
+  log("Cho thuốc thử Benedict → dung dịch xanh lam.");
 }
 
 function heat(i){
   if(!hasSample[i] || !hasBenedict[i]){
-    log("⚠️ Chưa đủ điều kiện để đun.");
+    log("⚠️ Chưa đủ điều kiện đun.");
     return;
   }
-  document.getElementById("fire"+i).style.display = "block";
+
+  const fire = document.getElementById("fire"+i);
+  fire.style.display = "block";
+
   setTimeout(()=>{
-    document.getElementById("fire"+i).style.display = "none";
+    fire.style.display = "none";
     const liq = document.getElementById("liq"+i);
+
     if(i === 2 || i === 4){
-      liq.style.background = "#b22222"; // đỏ gạch
+      liq.style.background = "#b22222";
       log("Có đường khử → xuất hiện kết tủa đỏ gạch.");
     } else {
       log("Không có đường khử → màu không đổi.");
     }
-  },2000);
+  }, 2000);
 }
 
 function resetAll(){
   for(let i=1;i<=4;i++){
-    const liq = document.getElementById("liq"+i);
-    liq.style.height = "0%";
-    liq.style.background = "transparent";
-    hasSample[i]=false;
-    hasBenedict[i]=false;
-    document.getElementById("fire"+i).style.display="none";
+    document.getElementById("liq"+i).style.height = "0%";
+    document.getElementById("liq"+i).style.background = "transparent";
+    if(i !== 4){
+      document.getElementById("mark"+i).style.display = "none";
+    }
+    document.getElementById("fire"+i).style.display = "none";
+    hasSample[i] = false;
+    hasBenedict[i] = false;
   }
   log("Đã đặt lại thí nghiệm.");
 }
